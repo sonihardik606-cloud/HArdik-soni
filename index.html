@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hi">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Shyam Garments — Online Shop</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root{
     --navy:#1B2A4A;
@@ -47,7 +47,7 @@
     display:flex;align-items:center;justify-content:space-between;
     gap:16px;
   }
-  .brand{font-size:22px;font-weight:700;color:var(--white);letter-spacing:0.2px;}
+  .brand{font-size:22px;font-weight:700;color:var(--white);letter-spacing:0.2px;cursor:pointer;}
   .brand span{color:var(--saffron);}
   .search-wrap{
     flex:1;max-width:420px;
@@ -79,19 +79,37 @@
     display:flex;align-items:center;justify-content:center;
   }
 
+  /* Timer Banner */
+  .timer-banner{
+    background:linear-gradient(90deg, #C0392B, #E8A33D);
+    color:var(--white);
+    padding:10px 20px;
+    text-align:center;
+    font-weight:600;
+    font-size:14px;
+    cursor:pointer;
+    display:flex;align-items:center;justify-content:center;gap:10px;
+    box-shadow:0 2px 5px rgba(0,0,0,0.1);
+  }
+  .timer-banner:hover{opacity:0.95;}
+  .timer-badge{
+    background:var(--white);color:var(--red);
+    padding:3px 8px;border-radius:6px;font-weight:700;font-size:13px;
+  }
+
   /* Hero */
   .hero{
     background:linear-gradient(180deg,var(--navy) 0%, var(--navy-light) 100%);
     color:var(--white);
-    padding:56px 20px 72px;
+    padding:40px 20px 60px;
     text-align:center;
   }
-  .hero h1{font-size:clamp(30px,5vw,46px);font-weight:700;max-width:680px;margin:0 auto 14px;}
-  .hero p{color:rgba(255,255,255,0.78);font-size:16px;max-width:520px;margin:0 auto;}
+  .hero h1{font-size:clamp(28px,4vw,42px);font-weight:700;max-width:680px;margin:0 auto 12px;}
+  .hero p{color:rgba(255,255,255,0.78);font-size:15px;max-width:520px;margin:0 auto;}
 
   /* Category chips */
   .categories{
-    max-width:1180px;margin:-32px auto 0;
+    max-width:1180px;margin:-28px auto 0;
     padding:0 20px;
     display:flex;gap:10px;overflow-x:auto;
     position:relative;z-index:5;
@@ -109,6 +127,10 @@
   .chip.active{background:var(--navy);color:var(--white);border-color:var(--navy);}
   .chip:hover:not(.active){border-color:var(--saffron);}
 
+  /* Views Management */
+  .page-view{display:none;}
+  .page-view.active{display:block;}
+
   /* Product grid */
   main{max-width:1180px;margin:0 auto;padding:36px 20px 80px;}
   .section-title{font-size:22px;font-weight:600;margin-bottom:18px;}
@@ -124,6 +146,7 @@
     overflow:hidden;
     display:flex;flex-direction:column;
     transition:box-shadow 0.15s ease, transform 0.15s ease;
+    cursor:pointer;
   }
   .card:hover{box-shadow:var(--shadow);transform:translateY(-2px);}
   .card-img{
@@ -150,14 +173,16 @@
 
   .empty-msg{text-align:center;color:var(--muted);padding:40px 0;font-size:14px;}
 
-  /* Cart drawer */
+  /* Overlay & Drawers / Modals */
   .overlay{
     position:fixed;inset:0;background:rgba(20,24,32,0.45);
     z-index:50;opacity:0;pointer-events:none;transition:opacity 0.2s ease;
   }
   .overlay.open{opacity:1;pointer-events:auto;}
+
+  /* Cart Drawer */
   .drawer{
-    position:fixed;top:0;right:0;height:100%;width:min(400px,92vw);
+    position:fixed;top:0;right:0;height:100%;width:min(420px,92vw);
     background:var(--white);z-index:51;
     display:flex;flex-direction:column;
     transform:translateX(100%);transition:transform 0.25s ease;
@@ -192,16 +217,34 @@
   .qty-val{font-size:14px;font-weight:600;min-width:16px;text-align:center;}
   .remove-btn{font-size:12px;color:var(--red);margin-left:auto;}
   .drawer-foot{padding:18px 20px;border-top:1px solid var(--line);}
-  .total-row{display:flex;justify-content:space-between;font-size:16px;font-weight:700;margin-bottom:14px;}
+  .summary-line{display:flex;justify-content:space-between;font-size:14px;margin-bottom:6px;color:var(--muted);}
+  .summary-line.discount{color:var(--green);font-weight:600;}
+  .summary-line.extra-charge{color:var(--red);font-weight:600;}
+  .total-row{display:flex;justify-content:space-between;font-size:16px;font-weight:700;margin-top:10px;margin-bottom:14px;color:var(--ink);border-top:1px dashed var(--line);padding-top:10px;}
   .checkout-btn{
     width:100%;background:var(--green);color:var(--white);
     padding:13px;border-radius:var(--radius);font-weight:600;font-size:15px;
     text-align:center;
   }
   .checkout-btn:hover{opacity:0.92;}
-  .checkout-btn:disabled{background:var(--muted);cursor:not-allowed;}
 
-  /* Checkout form (inside drawer, swapped view) */
+  /* Product Details Modal */
+  .modal{
+    position:fixed;top:50%;left:50%;transform:translate(-50%, -50%) scale(0.95);
+    width:min(500px, 90vw);max-height:90vh;overflow-y:auto;
+    background:var(--white);border-radius:14px;z-index:60;
+    box-shadow:0 10px 30px rgba(0,0,0,0.2);
+    padding:24px;opacity:0;pointer-events:none;transition:all 0.2s ease;
+  }
+  .modal.open{opacity:1;pointer-events:auto;transform:translate(-50%, -50%) scale(1);}
+  .modal-close{position:absolute;top:16px;right:16px;font-size:24px;color:var(--muted);cursor:pointer;}
+  .modal-img{height:180px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:64px;margin-bottom:16px;}
+  .modal-title{font-size:20px;font-weight:700;margin-bottom:4px;}
+  .modal-cat{font-size:12px;color:var(--muted);text-transform:uppercase;margin-bottom:12px;}
+  .modal-desc{font-size:14px;color:var(--ink);margin-bottom:16px;line-height:1.6;background:var(--cream);padding:12px;border-radius:8px;}
+  .modal-price{font-size:20px;font-weight:700;color:var(--navy);margin-bottom:16px;}
+
+  /* Checkout Form & Steps */
   .form-group{margin-bottom:14px;}
   .form-group label{display:block;font-size:13px;font-weight:600;margin-bottom:5px;}
   .form-group input,.form-group textarea{
@@ -210,7 +253,40 @@
   }
   .form-group input:focus,.form-group textarea:focus{border-color:var(--navy);}
   .form-error{font-size:12px;color:var(--red);margin-top:4px;}
-  .back-link{font-size:13px;color:var(--navy);font-weight:600;margin-bottom:14px;display:inline-block;}
+  .back-link{font-size:13px;color:var(--navy);font-weight:600;margin-bottom:14px;display:inline-block;cursor:pointer;}
+
+  .step-indicator{
+    font-size:12px;font-weight:700;color:var(--saffron-dark);
+    text-transform:uppercase;letter-spacing:0.5px;margin-bottom:12px;
+  }
+
+  /* Coupon Box */
+  .coupon-box{display:flex;gap:8px;margin-bottom:14px;}
+  .coupon-box input{flex:1;text-transform:uppercase;font-weight:600;letter-spacing:0.5px;}
+  .coupon-btn{background:var(--navy);color:var(--white);padding:0 14px;border-radius:8px;font-size:13px;font-weight:600;}
+  .coupon-msg{font-size:12px;margin-top:4px;font-weight:500;}
+  .coupon-msg.success{color:var(--green);}
+  .coupon-msg.error{color:var(--red);}
+
+  /* Payment Method Options */
+  .payment-options{display:flex;flex-direction:column;gap:10px;margin-bottom:14px;}
+  .pay-option{
+    border:1px solid var(--line);border-radius:8px;padding:12px;
+    display:flex;align-items:flex-start;gap:10px;cursor:pointer;
+    transition:border-color 0.15s ease;
+  }
+  .pay-option input{margin-top:3px;}
+  .pay-option.selected{border-color:var(--navy);background:rgba(27,42,74,0.03);}
+  .pay-title{font-size:14px;font-weight:600;}
+  .pay-sub{font-size:12px;color:var(--muted);}
+
+  /* Custom Fixed QR Box */
+  .qr-box{
+    display:none;background:var(--cream);border:1px solid var(--line);
+    border-radius:10px;padding:16px;text-align:center;margin-top:10px;
+  }
+  .qr-box.active{display:block;}
+  .qr-img{width:180px;height:auto;margin:0 auto 10px;background:var(--white);padding:6px;border-radius:8px;border:1px solid var(--line);}
 
   footer{
     background:var(--navy);color:rgba(255,255,255,0.65);
@@ -219,7 +295,7 @@
 
   @media(max-width:640px){
     .search-wrap{display:none;}
-    .hero{padding:44px 16px 60px;}
+    .hero{padding:30px 16px 50px;}
   }
 </style>
 </head>
@@ -227,7 +303,7 @@
 
 <header>
   <div class="header-inner">
-    <div class="brand">Shyam <span>Garments</span></div>
+    <div class="brand" id="brandLogo">Shyam <span>Garments</span></div>
     <div class="search-wrap">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
       <input type="text" id="searchInput" placeholder="Products khojein...">
@@ -239,24 +315,61 @@
   </div>
 </header>
 
-<section class="hero">
-  <h1>Latest fashion, seedha aapke ghar tak</h1>
-  <p>Men, women aur kids ke liye quality kapde. Browse karein aur order karein — bas ek click mein.</p>
-</section>
+<!-- Live Countdown Timer Banner (Clicking opens Deals Page) -->
+<div class="timer-banner" id="timerBanner">
+  ⚡ Limited Offer Ends In: <span class="timer-badge" id="countdownClock">00:00:00</span> — Click to view deals! ➔
+</div>
 
-<div class="categories" id="categoryBar"></div>
+<!-- PAGE 1: MAIN STORE PAGE -->
+<div class="page-view active" id="homePage">
+  <section class="hero">
+    <h1>Latest fashion, seedha aapke ghar tak</h1>
+    <p>Men, women aur kids ke liye quality kapde. Browse karein aur order karein — bas ek click mein.</p>
+  </section>
 
-<main>
-  <h2 class="section-title" id="sectionTitle">Sabhi Products</h2>
-  <div class="grid" id="productGrid"></div>
-  <p class="empty-msg" id="emptyMsg" style="display:none;">Koi product nahi mila. Kuch aur search karein.</p>
-</main>
+  <div class="categories" id="categoryBar"></div>
 
-<footer>Shyam Garments — Bardli, Bijainagar (Ajmer). Order WhatsApp ke through confirm hota hai. Payment delivery ke time par.</footer>
+  <main>
+    <h2 class="section-title" id="sectionTitle">Sabhi Products</h2>
+    <div class="grid" id="productGrid"></div>
+    <p class="empty-msg" id="emptyMsg" style="display:none;">Koi product nahi mila. Kuch aur search karein.</p>
+  </main>
+</div>
 
+<!-- PAGE 2: SEPARATE SPECIAL DEALS PAGE -->
+<div class="page-view" id="dealsPage">
+  <section class="hero" style="background:linear-gradient(180deg, #C0392B 0%, var(--navy) 100%);">
+    <h1>🔥 Special Discount Deals</h1>
+    <p>⚡ Yeh offers sirf timer khatam hone tak valid hain!</p>
+    <button id="backToHomeBtn" style="margin-top:14px;background:var(--white);color:var(--navy);padding:8px 16px;border-radius:20px;font-weight:600;font-size:13px;">&larr; Wapas Store Par Jaayein</button>
+  </section>
+
+  <main>
+    <h2 class="section-title">Limited Time Discounted Offers</h2>
+    <div class="grid" id="dealsGrid"></div>
+  </main>
+</div>
+
+<footer>Shyam Garments — Sadar Bazaar, Fort Badli, Bijainagar (Ajmer). Order WhatsApp ke through confirm hota hai.</footer>
+
+<!-- Overlay -->
 <div class="overlay" id="overlay"></div>
+
+<!-- Product Details Modal -->
+<div class="modal" id="productModal">
+  <span class="modal-close" id="closeModal">&times;</span>
+  <div class="modal-img" id="modalImg"></div>
+  <div class="modal-cat" id="modalCat"></div>
+  <div class="modal-title" id="modalTitle"></div>
+  <div class="modal-price" id="modalPrice"></div>
+  <div class="modal-desc" id="modalDesc"></div>
+  <button class="add-btn" id="modalAddBtn" style="width:100%;padding:12px;font-size:15px;">Cart mein daalein</button>
+</div>
+
+<!-- Cart & Step-by-Step Checkout Drawer -->
 <div class="drawer" id="drawer">
 
+  <!-- Cart View -->
   <div id="cartView">
     <div class="drawer-head">
       <h2>Aapka Cart</h2>
@@ -264,28 +377,33 @@
     </div>
     <div class="drawer-body" id="cartBody"></div>
     <div class="drawer-foot" id="cartFoot">
-      <div class="total-row"><span>Total</span><span id="cartTotal">₹0</span></div>
-      <button class="checkout-btn" id="goCheckout">Checkout karein</button>
+      <div class="summary-line"><span>Subtotal</span><span id="cartSubtotal">₹0</span></div>
+      <button class="checkout-btn" id="goStep1">Checkout Karein</button>
     </div>
   </div>
 
-  <div id="checkoutView" style="display:none;flex-direction:column;height:100%;">
+  <!-- Checkout Step 1: Customer Details -->
+  <div id="checkoutStep1" style="display:none;flex-direction:column;height:100%;">
     <div class="drawer-head">
-      <h2>Order Details</h2>
-      <button class="close-btn" id="closeCart2" aria-label="Close">&times;</button>
+      <h2>Delivery Details</h2>
+      <button class="close-btn" id="closeCartStep1" aria-label="Close">&times;</button>
     </div>
     <div class="drawer-body">
       <a class="back-link" id="backToCart">&larr; Cart mein wapas jaayein</a>
+      <div class="step-indicator">Step 1 of 2: Customer Info</div>
+
       <div class="form-group">
         <label for="custName">Poora Naam</label>
         <input type="text" id="custName" placeholder="Ramesh Kumar">
         <div class="form-error" id="errName" style="display:none;">Naam likhein</div>
       </div>
+
       <div class="form-group">
         <label for="custPhone">Phone Number</label>
         <input type="tel" id="custPhone" placeholder="98765 43210">
         <div class="form-error" id="errPhone" style="display:none;">Sahi phone number likhein</div>
       </div>
+
       <div class="form-group">
         <label for="custAddr">Delivery Address</label>
         <textarea id="custAddr" rows="3" placeholder="Ghar/Flat no., Gali, Shehar, Pincode"></textarea>
@@ -293,7 +411,70 @@
       </div>
     </div>
     <div class="drawer-foot">
-      <div class="total-row"><span>Total</span><span id="checkoutTotal">₹0</span></div>
+      <button class="checkout-btn" id="goStep2">Next: Payment Option ➔</button>
+    </div>
+  </div>
+
+  <!-- Checkout Step 2: Payment Method & QR Code -->
+  <div id="checkoutStep2" style="display:none;flex-direction:column;height:100%;">
+    <div class="drawer-head">
+      <h2>Payment Method</h2>
+      <button class="close-btn" id="closeCartStep2" aria-label="Close">&times;</button>
+    </div>
+    <div class="drawer-body">
+      <a class="back-link" id="backToStep1">&larr; Customer details badlein</a>
+      <div class="step-indicator">Step 2 of 2: Payment Selection</div>
+
+      <!-- Coupon Box -->
+      <div class="form-group">
+        <label>Coupon Code</label>
+        <div class="coupon-box">
+          <input type="text" id="couponInput" placeholder="Ex: SHYAM10">
+          <button class="coupon-btn" id="applyCouponBtn">Apply</button>
+        </div>
+        <div class="coupon-msg" id="couponMsg" style="display:none;"></div>
+      </div>
+
+      <!-- Payment Method Selection -->
+      <div class="form-group">
+        <label>Payment Method Chunein</label>
+        <div class="payment-options">
+          <label class="pay-option selected" id="optOnline">
+            <input type="radio" name="payMethod" value="online" checked>
+            <div>
+              <div class="pay-title">Online Payment (UPI / QR Code)</div>
+              <div class="pay-sub">GPay, PhonePe, Paytm se QR code scan karke pay karein</div>
+            </div>
+          </label>
+
+          <label class="pay-option" id="optCOD">
+            <input type="radio" name="payMethod" value="cod">
+            <div>
+              <div class="pay-title">Cash on Delivery (COD)</div>
+              <div class="pay-sub">Ghar par delivery ke samay cash dein (+₹100 Extra Charge)</div>
+            </div>
+          </label>
+        </div>
+      </div>
+
+      <!-- Fixed Uploaded QR Code Box -->
+      <div class="qr-box active" id="qrBox">
+        <div style="font-size:13px;font-weight:600;margin-bottom:8px;">QR Code Scan Karke Payment Karein:</div>
+        
+        <!-- Updated to use static store QR code URL -->
+        <img class="qr-img" src="https://i.ibb.co/L5QyXQJ/shyam-qr.jpg" alt="Shyam Garments UPI QR Code" onerror="this.src='https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=upi%3A%2F%2Fpay%3Fpa%3D7976658110%40upi%26pn%3DShyamGarments';">
+        
+        <div style="font-size:12px;color:var(--muted);">UPI ID: <strong>7976658110@upi</strong></div>
+        <div style="font-size:11px;color:var(--green);margin-top:4px;">Payment karne ke baad WhatsApp par screenshot zaroor bhejein</div>
+      </div>
+    </div>
+
+    <!-- Final Order Summary Footer -->
+    <div class="drawer-foot">
+      <div class="summary-line"><span>Subtotal</span><span id="checkSubtotal">₹0</span></div>
+      <div class="summary-line discount" id="discountRow" style="display:none;"><span>Coupon Discount</span><span id="checkDiscount">-₹0</span></div>
+      <div class="summary-line extra-charge" id="codRow" style="display:none;"><span>COD Extra Charge</span><span>+₹100</span></div>
+      <div class="total-row"><span>Final Total</span><span id="checkoutTotal">₹0</span></div>
       <button class="checkout-btn" id="sendOrder">WhatsApp par order bhejein</button>
     </div>
   </div>
@@ -302,26 +483,65 @@
 
 <script>
 const PRODUCTS = [
-  {id:1,name:"Cotton Kurta - Men",cat:"Men",price:699,icon:"👕",stock:12},
-  {id:2,name:"Formal Shirt - Men",cat:"Men",price:899,icon:"👔",stock:10},
-  {id:3,name:"Denim Jeans - Men",cat:"Men",price:1199,icon:"👖",stock:3},
-  {id:4,name:"Printed Saree",cat:"Women",price:1450,icon:"🥻",stock:5},
-  {id:5,name:"Anarkali Suit Set",cat:"Women",price:1699,icon:"👗",stock:6},
-  {id:6,name:"Women's Leggings",cat:"Women",price:349,icon:"🩳",stock:20},
-  {id:7,name:"Kids T-Shirt",cat:"Kids",price:299,icon:"👶",stock:15},
-  {id:8,name:"Kids Frock",cat:"Kids",price:549,icon:"🧒",stock:2},
-  {id:9,name:"Kids Shorts Set",cat:"Kids",price:399,icon:"🩱",stock:9},
-  {id:10,name:"Leather Belt",cat:"Accessories",price:399,icon:"👞",stock:14},
-  {id:11,name:"Cotton Dupatta",cat:"Accessories",price:249,icon:"🧣",stock:18},
-  {id:12,name:"Winter Shawl",cat:"Accessories",price:799,icon:"🧥",stock:7},
+  {id:1,name:"Cotton Kurta - Men",cat:"Men",price:699,icon:"👕",stock:12,desc:"High quality 100% pure cotton kurta, highly comfortable for daily wear and formal occasions."},
+  {id:2,name:"Formal Shirt - Men",cat:"Men",price:899,icon:"👔",stock:10,desc:"Premium slim-fit cotton formal shirt, wrinkle-resistant fabric suitable for office and events."},
+  {id:3,name:"Denim Jeans - Men",cat:"Men",price:1199,icon:"👖",stock:3,desc:"Durable and stretchable denim jeans with stylish wash finish."},
+  {id:4,name:"Printed Saree",cat:"Women",price:1450,icon:"🥻",stock:5,desc:"Elegant printed saree with soft fabric finish, comes with matching blouse piece."},
+  {id:5,name:"Anarkali Suit Set",cat:"Women",price:1699,icon:"👗",stock:6,desc:"Beautifully embroidered designer Anarkali suit set with dupatta."},
+  {id:6,name:"Women's Leggings",cat:"Women",price:349,icon:"🩳",stock:20,desc:"4-way stretchable cotton leggings, available in premium colors."},
+  {id:7,name:"Kids T-Shirt",cat:"Kids",price:299,icon:"👶",stock:15,desc:"Soft and breathable cotton t-shirt designed for all-day kids comfort."},
+  {id:8,name:"Kids Frock",cat:"Kids",price:549,icon:"🧒",stock:2,desc:"Cute designer party frock for kids with soft inner lining."},
+  {id:9,name:"Kids Shorts Set",cat:"Kids",price:399,icon:"🩱",stock:9,desc:"Comfortable top and shorts combo set for daily wear."},
+  {id:10,name:"Leather Belt",cat:"Accessories",price:399,icon:"👞",stock:14,desc:"100% genuine leather belt with sturdy metal buckle."},
+  {id:11,name:"Cotton Dupatta",cat:"Accessories",price:249,icon:"🧣",stock:18,desc:"Lightweight printed cotton dupatta with decorative border."},
+  {id:12,name:"Winter Shawl",cat:"Accessories",price:799,icon:"🧥",stock:7,desc:"Warm and soft woollen shawl with traditional patterns."}
 ];
 
-const STORE_PHONE = "917976658110"; // store's WhatsApp number, country code included, no + or spaces
+const SPECIAL_DEALS = [
+  {id:101,name:"Special Combo: Kurta + Belt",cat:"Deals",price:999,icon:"🎁",stock:4,desc:"Special sale offer combo pack with discount."},
+  {id:102,name:"Festive Saree Special",cat:"Deals",price:1299,icon:"✨",stock:3,desc:"Limited offer price on designer saree."},
+  {id:103,name:"Kids Combo Pack (Set of 2)",cat:"Deals",price:499,icon:"🌟",stock:5,desc:"Buy 2 kids wear sets at offer price."}
+];
+
+const STORE_PHONE = "917976658110"; 
+
+const COUPONS = {
+  "SHYAM10": { type: "percent", value: 10, desc: "10% Off" },
+  "OFFER50": { type: "flat", value: 50, desc: "₹50 Off" },
+  "WELCOME100": { type: "flat", value: 100, desc: "₹100 Off" }
+};
 
 let cart = {};
 let activeCategory = "All";
 let searchTerm = "";
+let selectedPayMethod = "online";
+let appliedCoupon = null;
 
+/* Navigation Pages */
+function showPage(pageId){
+  document.querySelectorAll('.page-view').forEach(p=>p.classList.remove('active'));
+  document.getElementById(pageId).classList.add('active');
+  window.scrollTo(0,0);
+}
+document.getElementById('timerBanner').onclick = ()=> showPage('dealsPage');
+document.getElementById('backToHomeBtn').onclick = ()=> showPage('homePage');
+document.getElementById('brandLogo').onclick = ()=> showPage('homePage');
+
+/* Timer Countdown Script */
+let duration = 3 * 3600 + 45 * 60 + 20; // 3 hours 45 mins timer
+function startTimer(){
+  const clock = document.getElementById('countdownClock');
+  setInterval(()=>{
+    let hrs = Math.floor(duration / 3600);
+    let mins = Math.floor((duration % 3600) / 60);
+    let secs = duration % 60;
+    clock.textContent = `${hrs.toString().padStart(2,'0')}:${mins.toString().padStart(2,'0')}:${secs.toString().padStart(2,'0')}`;
+    if(duration > 0) duration--;
+  },1000);
+}
+startTimer();
+
+/* Category Bar & Product Grid */
 const categories = ["All", ...new Set(PRODUCTS.map(p=>p.cat))];
 const categoryBar = document.getElementById('categoryBar');
 categories.forEach(cat=>{
@@ -331,6 +551,7 @@ categories.forEach(cat=>{
   btn.onclick = ()=>{ activeCategory = cat; renderCategoryBar(); renderGrid(); };
   categoryBar.appendChild(btn);
 });
+
 function renderCategoryBar(){
   [...categoryBar.children].forEach(c=>c.classList.toggle('active', c.textContent===activeCategory));
   document.getElementById('sectionTitle').textContent = activeCategory==='All' ? 'Sabhi Products' : activeCategory;
@@ -345,33 +566,84 @@ function renderGrid(){
     return matchCat && matchSearch;
   });
   document.getElementById('emptyMsg').style.display = filtered.length ? 'none' : 'block';
-  filtered.forEach(p=>{
-    const inCart = !!cart[p.id];
-    const card = document.createElement('div');
-    card.className = 'card';
-    card.innerHTML = `
-      <div class="card-img" style="background:${bgFor(p.cat)}">${p.icon}</div>
-      <div class="card-body">
-        <div class="card-cat">${p.cat}</div>
-        <div class="card-name">${p.name}</div>
-        <div class="card-stock ${p.stock<5?'low':''}">${p.stock<5? p.stock+' bache hain' : 'Stock mein hai'}</div>
-        <div class="card-price">₹${p.price}</div>
-        <button class="add-btn ${inCart?'in-cart':''}" data-id="${p.id}">${inCart? 'Cart mein hai ✓' : 'Cart mein daalein'}</button>
-      </div>`;
-    grid.appendChild(card);
-  });
-  grid.querySelectorAll('.add-btn').forEach(btn=>{
-    btn.onclick = ()=>{
-      const id = Number(btn.dataset.id);
-      addToCart(id);
-    };
-  });
+  filtered.forEach(p=> grid.appendChild(createCard(p)));
+
+  // Render Deals Grid
+  const dealsGrid = document.getElementById('dealsGrid');
+  dealsGrid.innerHTML = '';
+  SPECIAL_DEALS.forEach(p=> dealsGrid.appendChild(createCard(p)));
 }
+
+function createCard(p){
+  const inCart = !!cart[p.id];
+  const card = document.createElement('div');
+  card.className = 'card';
+  card.innerHTML = `
+    <div class="card-img" style="background:${bgFor(p.cat)}">${p.icon}</div>
+    <div class="card-body">
+      <div class="card-cat">${p.cat}</div>
+      <div class="card-name">${p.name}</div>
+      <div class="card-stock ${p.stock<5?'low':''}">${p.stock<5? p.stock+' bache hain' : 'Stock mein hai'}</div>
+      <div class="card-price">₹${p.price}</div>
+      <button class="add-btn ${inCart?'in-cart':''}" data-id="${p.id}">${inCart? 'Cart mein hai ✓' : 'Cart mein daalein'}</button>
+    </div>`;
+
+  card.onclick = (e)=>{
+    if(e.target.classList.contains('add-btn')) return;
+    openProductModal(p);
+  };
+
+  card.querySelector('.add-btn').onclick = (e)=>{
+    e.stopPropagation();
+    addToCart(p.id);
+  };
+  return card;
+}
+
 function bgFor(cat){
-  const map = {Grocery:'#F3EEE0', Clothing:'#F3E4E0', Electronics:'#E2E9F3', Home:'#E7F0E5'};
+  const map = {Men:'#E2E9F3', Women:'#F3E4E0', Kids:'#E7F0E5', Accessories:'#F3EEE0', Deals:'#FFE8E8'};
   return map[cat] || '#EEE';
 }
 
+/* Modal Logic */
+const productModal = document.getElementById('productModal');
+let currentModalProductId = null;
+
+function openProductModal(p){
+  currentModalProductId = p.id;
+  document.getElementById('modalImg').style.background = bgFor(p.cat);
+  document.getElementById('modalImg').textContent = p.icon;
+  document.getElementById('modalCat').textContent = p.cat;
+  document.getElementById('modalTitle').textContent = p.name;
+  document.getElementById('modalPrice').textContent = '₹' + p.price;
+  document.getElementById('modalDesc').textContent = p.desc || 'Quality apparel product from Shyam Garments.';
+  
+  const inCart = !!cart[p.id];
+  const modalAddBtn = document.getElementById('modalAddBtn');
+  modalAddBtn.textContent = inCart ? 'Cart mein hai ✓' : 'Cart mein daalein';
+  modalAddBtn.className = 'add-btn ' + (inCart ? 'in-cart' : '');
+  
+  overlay.classList.add('open');
+  productModal.classList.add('open');
+}
+
+function closeProductModal(){
+  productModal.classList.remove('open');
+  if(!drawer.classList.contains('open')){
+    overlay.classList.remove('open');
+  }
+}
+document.getElementById('closeModal').onclick = closeProductModal;
+
+document.getElementById('modalAddBtn').onclick = ()=>{
+  if(currentModalProductId){
+    addToCart(currentModalProductId);
+    const all = [...PRODUCTS, ...SPECIAL_DEALS];
+    openProductModal(all.find(p=>p.id===currentModalProductId));
+  }
+};
+
+/* Cart & Pricing Logic */
 function addToCart(id){
   cart[id] = (cart[id]||0) + 1;
   updateCartUI();
@@ -383,20 +655,37 @@ function changeQty(id, delta){
   updateCartUI();
   renderGrid();
 }
-function cartTotal(){
+function getSubtotal(){
+  const all = [...PRODUCTS, ...SPECIAL_DEALS];
   return Object.entries(cart).reduce((sum,[id,qty])=>{
-    const p = PRODUCTS.find(p=>p.id===Number(id));
-    return sum + p.price*qty;
+    const p = all.find(p=>p.id===Number(id));
+    return sum + (p ? p.price*qty : 0);
   },0);
+}
+function getDiscountAmount(subtotal){
+  if(!appliedCoupon || !COUPONS[appliedCoupon]) return 0;
+  const c = COUPONS[appliedCoupon];
+  if(c.type === 'percent') return Math.round((subtotal * c.value) / 100);
+  if(c.type === 'flat') return Math.min(subtotal, c.value);
+  return 0;
+}
+function getFinalTotal(){
+  const subtotal = getSubtotal();
+  const discount = getDiscountAmount(subtotal);
+  const codExtra = (selectedPayMethod === 'cod') ? 100 : 0;
+  return Math.max(0, subtotal - discount + codExtra);
 }
 function cartCount(){
   return Object.values(cart).reduce((a,b)=>a+b,0);
 }
+
 function updateCartUI(){
   document.getElementById('cartCount').textContent = cartCount();
   const body = document.getElementById('cartBody');
   const foot = document.getElementById('cartFoot');
   const entries = Object.entries(cart);
+  const all = [...PRODUCTS, ...SPECIAL_DEALS];
+
   if(entries.length===0){
     body.innerHTML = '<p class="empty-msg">Aapka cart khaali hai.</p>';
     foot.style.display = 'none';
@@ -404,7 +693,7 @@ function updateCartUI(){
     foot.style.display = 'block';
     body.innerHTML = '';
     entries.forEach(([id,qty])=>{
-      const p = PRODUCTS.find(p=>p.id===Number(id));
+      const p = all.find(p=>p.id===Number(id));
       const row = document.createElement('div');
       row.className = 'cart-item';
       row.innerHTML = `
@@ -428,44 +717,81 @@ function updateCartUI(){
       b.onclick = ()=>{ delete cart[Number(b.dataset.id)]; updateCartUI(); renderGrid(); };
     });
   }
-  document.getElementById('cartTotal').textContent = '₹' + cartTotal();
-  document.getElementById('checkoutTotal').textContent = '₹' + cartTotal();
+
+  const subtotal = getSubtotal();
+  document.getElementById('cartSubtotal').textContent = '₹' + subtotal;
+  updateCheckoutCalculations();
 }
 
-// Drawer open/close
+function updateCheckoutCalculations(){
+  const subtotal = getSubtotal();
+  const discount = getDiscountAmount(subtotal);
+  const finalTotal = getFinalTotal();
+
+  document.getElementById('checkSubtotal').textContent = '₹' + subtotal;
+
+  const discountRow = document.getElementById('discountRow');
+  if(discount > 0){
+    discountRow.style.display = 'flex';
+    document.getElementById('checkDiscount').textContent = '-₹' + discount;
+  } else {
+    discountRow.style.display = 'none';
+  }
+
+  const codRow = document.getElementById('codRow');
+  if(selectedPayMethod === 'cod'){
+    codRow.style.display = 'flex';
+  } else {
+    codRow.style.display = 'none';
+  }
+
+  document.getElementById('checkoutTotal').textContent = '₹' + finalTotal;
+}
+
+/* Drawer open/close & Step Navigation */
 const overlay = document.getElementById('overlay');
 const drawer = document.getElementById('drawer');
-function openDrawer(){ overlay.classList.add('open'); drawer.classList.add('open'); showCartView(); }
-function closeDrawer(){ overlay.classList.remove('open'); drawer.classList.remove('open'); }
+
+function openDrawer(){ closeProductModal(); overlay.classList.add('open'); drawer.classList.add('open'); showCartView(); }
+function closeDrawer(){ drawer.classList.remove('open'); if(!productModal.classList.contains('open')) overlay.classList.remove('open'); }
+
 document.getElementById('openCart').onclick = openDrawer;
 document.getElementById('closeCart').onclick = closeDrawer;
-document.getElementById('closeCart2').onclick = closeDrawer;
-overlay.onclick = closeDrawer;
+document.getElementById('closeCartStep1').onclick = closeDrawer;
+document.getElementById('closeCartStep2').onclick = closeDrawer;
+overlay.onclick = ()=>{ closeDrawer(); closeProductModal(); };
 
 function showCartView(){
   document.getElementById('cartView').style.display = 'flex';
   document.getElementById('cartView').style.flexDirection = 'column';
   document.getElementById('cartView').style.height = '100%';
-  document.getElementById('checkoutView').style.display = 'none';
+  document.getElementById('checkoutStep1').style.display = 'none';
+  document.getElementById('checkoutStep2').style.display = 'none';
 }
-function showCheckoutView(){
+
+function showStep1(){
   document.getElementById('cartView').style.display = 'none';
-  document.getElementById('checkoutView').style.display = 'flex';
+  document.getElementById('checkoutStep1').style.display = 'flex';
+  document.getElementById('checkoutStep2').style.display = 'none';
 }
-document.getElementById('goCheckout').onclick = ()=>{
+
+function showStep2(){
+  document.getElementById('cartView').style.display = 'none';
+  document.getElementById('checkoutStep1').style.display = 'none';
+  document.getElementById('checkoutStep2').style.display = 'flex';
+  updateCheckoutCalculations();
+}
+
+document.getElementById('goStep1').onclick = ()=>{
   if(cartCount()===0) return;
-  showCheckoutView();
+  showStep1();
 };
+
 document.getElementById('backToCart').onclick = showCartView;
+document.getElementById('backToStep1').onclick = showStep1;
 
-// Search
-document.getElementById('searchInput').addEventListener('input', (e)=>{
-  searchTerm = e.target.value;
-  renderGrid();
-});
-
-// Send order via WhatsApp
-document.getElementById('sendOrder').onclick = ()=>{
+/* Step 1 Validation to Go to Step 2 */
+document.getElementById('goStep2').onclick = ()=>{
   const name = document.getElementById('custName').value.trim();
   const phone = document.getElementById('custPhone').value.trim();
   const addr = document.getElementById('custAddr').value.trim();
@@ -481,15 +807,97 @@ document.getElementById('sendOrder').onclick = ()=>{
   document.getElementById('errAddr').style.display = addr ? 'none' : 'block';
   if(!addr) valid = false;
 
-  if(!valid) return;
+  if(valid){
+    showStep2();
+  }
+};
 
-  let msg = `Naya Order — Apna Store%0A%0A`;
-  msg += `Naam: ${name}%0APhone: ${phone}%0AAddress: ${addr}%0A%0AItems:%0A`;
+/* Coupon Logic */
+document.getElementById('applyCouponBtn').onclick = ()=>{
+  const code = document.getElementById('couponInput').value.trim().toUpperCase();
+  const msg = document.getElementById('couponMsg');
+  if(COUPONS[code]){
+    appliedCoupon = code;
+    msg.className = 'coupon-msg success';
+    msg.textContent = `Coupon '${code}' applied (${COUPONS[code].desc})!`;
+    msg.style.display = 'block';
+  } else {
+    appliedCoupon = null;
+    msg.className = 'coupon-msg error';
+    msg.textContent = 'Invalid Coupon Code. Try SHYAM10 or OFFER50';
+    msg.style.display = 'block';
+  }
+  updateCheckoutCalculations();
+};
+
+/* Payment Method Selection */
+const optOnline = document.getElementById('optOnline');
+const optCOD = document.getElementById('optCOD');
+const qrBox = document.getElementById('qrBox');
+
+optOnline.onclick = ()=>{
+  selectedPayMethod = 'online';
+  optOnline.classList.add('selected');
+  optCOD.classList.remove('selected');
+  optOnline.querySelector('input').checked = true;
+  qrBox.classList.add('active');
+  updateCheckoutCalculations();
+};
+
+optCOD.onclick = ()=>{
+  selectedPayMethod = 'cod';
+  optCOD.classList.add('selected');
+  optOnline.classList.remove('selected');
+  optCOD.querySelector('input').checked = true;
+  qrBox.classList.remove('active');
+  updateCheckoutCalculations();
+};
+
+/* Search Filter */
+document.getElementById('searchInput').addEventListener('input', (e)=>{
+  searchTerm = e.target.value;
+  renderGrid();
+});
+
+/* Send Order via WhatsApp */
+document.getElementById('sendOrder').onclick = ()=>{
+  const name = document.getElementById('custName').value.trim();
+  const phone = document.getElementById('custPhone').value.trim();
+  const addr = document.getElementById('custAddr').value.trim();
+
+  const subtotal = getSubtotal();
+  const discount = getDiscountAmount(subtotal);
+  const finalTotal = getFinalTotal();
+  const all = [...PRODUCTS, ...SPECIAL_DEALS];
+
+  let msg = `🛍️ *NEW ORDER - SHYAM GARMENTS*%0A%0A`;
+  msg += `👤 *Customer Details:*%0A`;
+  msg += `• Name: ${name}%0A`;
+  msg += `• Phone: ${phone}%0A`;
+  msg += `• Address: ${addr}%0A%0A`;
+
+  msg += `📦 *Order Items:*%0A`;
   Object.entries(cart).forEach(([id,qty])=>{
-    const p = PRODUCTS.find(p=>p.id===Number(id));
-    msg += `- ${p.name} x${qty} = ₹${p.price*qty}%0A`;
+    const p = all.find(p=>p.id===Number(id));
+    if(p) msg += `• ${p.name} (x${qty}) - ₹${p.price*qty}%0A`;
   });
-  msg += `%0ATotal: ₹${cartTotal()}`;
+
+  msg += `%0A💳 *Payment Summary:*%0A`;
+  msg += `• Subtotal: ₹${subtotal}%0A`;
+  if(appliedCoupon && discount > 0){
+    msg += `• Coupon (${appliedCoupon}): -₹${discount}%0A`;
+  }
+  if(selectedPayMethod === 'cod'){
+    msg += `• Payment Method: Cash on Delivery (COD)%0A`;
+    msg += `• COD Charges: +₹100%0A`;
+  } else {
+    msg += `• Payment Method: Online UPI / QR Code%0A`;
+  }
+  msg += `• *Final Total: ₹${finalTotal}*%0A`;
+
+  if(selectedPayMethod === 'online'){
+    msg += `%0A_(Note: Payment screenshot WhatsApp par bhej dein)_`;
+  }
 
   const waLink = `https://wa.me/${STORE_PHONE}?text=${msg}`;
   window.open(waLink, '_blank');
